@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title><ui:insert name="title">Concessionaria</ui:insert></title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet"
+		href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+	<h:outputStylesheet library="css" name="estilos.css" />
+	<ui:insert name="style"></ui:insert>
+
+	<style>
+/* Remove the navbar's default rounded borders and increase the bottom margin */
+.navbar {
+	margin-bottom: 20px;
+	border-radius: 0;
+}
+
+/* Remove the jumbotron's default bottom margin */
+.jumbotron {
+	margin-bottom: 0;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+/* Add a gray background color and some padding to the footer */
+footer {
+	background-color: #f2f2f2;
+	padding: 25px;
+}
+</style>
+
+</h:head>
+
+<h:body>
+
+	<div class="jumbotron">
+		<div class="container text-center">
+			<ui:insert name="header">
+
+				<img src="logoMenor.png"
+					style="top: 20px; left: 80px; position: absolute" width="270px" />
+				<h1>Concessionaria</h1>
+				<p>Novos, Usados, Serviços Gerais</p>
+			</ui:insert>
+		</div>
+	</div>
+
+	<nav class="navbar navbar-inverse ">
+	<div class="container-fluid ">
+		<div class="collapse navbar-collapse" id="myNavbar">
+			<ul class="nav navbar-nav">
+
+				<li><a href="/ConcessionariaWeb/pages/Principal.xhtml">Principal</a></li>
+				<li><a href="/ConcessionariaWeb/pages/carro.xhtml">Carros</a></li>
+				<li><a href="/ConcessionariaWeb/pages/venda.xhtml">Venda
+						Automoveis</a></li>
+				<li><a href="/ConcessionariaWeb/pages/historicoVenda.xhtml">Historico
+						de vendas</a></li>
+				<li><a href="/ConcessionariaWeb/pages/servicos.xhtml">Serviços</a></li>
+				<li><a href="/ConcessionariaWeb/pages/contato.xhtml">Contato</a></li>
+			</ul>
+		</div>
+	</div>
+	</nav>
+
+
+	<div class="container">
+		<p:growl id="msgGlobal" life="5000" />
+		<ui:insert name="conteudo" />
+	</div>
+	<br />
+
+	<footer class="container-fluid text-center">
+	<p>Todos os direitos reservados</p>
+	<ui:insert name="footer">
+	</ui:insert> </footer>
+
+</h:body>
+
+</html>

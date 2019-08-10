@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/Template.xhtml">
+
+
+	<ui:define name="conteudo">
+		<h:form id="frmCarrosListagem">
+			<p:dataTable id="tblCarros" widgetVar="tabelaCarros"
+				emptyMessage="Nenhum Carro encontrado."
+				value="#{MBCarro.itens}" var="item" 
+				filteredValue="#{MBCarro.itensFiltrados}"
+				paginator="true" rows="20"
+				rowKey="#{item.placa}"
+				selection="#{MBCarro.carro}"
+                selectionMode="single">
+				
+				<f:facet name="header">
+					Estoque de Carros
+				</f:facet>
+				
+				<p:column headerText="Placa" sortBy="#{item.placa}">
+					<h:outputText value="#{item.placa}" />
+				</p:column>
+
+				<p:column headerText="Cor">
+					<h:outputText value="#{item.cor}" />
+				</p:column>
+
+				<p:column  headerText="Modelo" filterBy="#{item.modelo}" sortBy="#{item.modelo}">
+					<h:outputText value="#{item.modelo}" />
+				</p:column>
+
+				<p:column  headerText="Ano" filterBy="#{item.ano}" sortBy="#{item.ano}">
+					<h:outputText value="#{item.ano}"/>
+				</p:column>
+
+				<p:column headerText="Preço" sortBy="#{item.preco}">
+					<h:outputText value="#{item.preco}">
+						<f:convertNumber type="currency" currencySymbol="R$" />
+					</h:outputText>
+				</p:column>
+				
+				<p:column headerText="Situação" filterBy="#{item.situacao}">
+					<h:outputText value="#{item.situacao}"/>
+				</p:column>
+				
+				<p:column  headerText="Opçoes" style="text-align: center;" >
+					
+
+					<p:commandButton  icon="ui-icon-trash" oncomplete="PF('dlgExcluir').show();" 
+					update=":frmCarrosExcluir:pnlPlacaExcluir :frmCarrosExcluir:pnlCorExcluir :frmCarrosExcluir:pnlModeloExcluir :frmCarrosExcluir:pnlAnoExcluir :frmCarrosExcluir:pnlPrecoExcluir :frmCarrosExcluir:pnlSituacaoExcluir">
+						<f:setPropertyActionListener  target="#{MBCarro.carro}" value="#{item}"/>
+					</p:commandButton>
+					
+					<p:commandButton icon="ui-icon-pencil" oncomplete="PF('dlgEditar').show();" 
+					update=":frmCarrosEditar:pnlPlacaEditar :frmCarrosEditar:pnlCorEditar :frmCarrosEditar:pnlModeloEditar :frmCarrosEditar:pnlAnoEditar :frmCarrosEditar:pnlPrecoEditar :frmCarrosEditar:pnlSituacaoEditar">
+						<f:setPropertyActionListener target="#{MBCarro.carro}"  value="#{item}"/>
+					</p:commandButton>
+					
+					<p:commandButton icon="ui-icon-search" oncomplete="PF('dlgPesquisa').show();" 
+					update=":frmPesquisa:pnlPesquisaPlaca :frmPesquisa:pnlPesquisaDescricao :frmPesquisa:pnlPesquisaPeriodo">
+						<f:setPropertyActionListener target="#{MBServico.servico}"  value="#{item}"/>
+					</p:commandButton>
+					
+				</p:column>
+				
+				
+				<f:facet name="footer"> 
+					<p:commandButton value="Novo Carro" actionListener="#{MBCarro.preparaSalvar}" oncomplete="PF('dlgNovo').show();	" 
+					update=":frmCarrosNovo:pnlPlaca :frmCarrosNovo:pnlCor :frmCarrosNovo:pnlModelo :frmCarrosNovo:pnlAno :frmCarrosNovo:pnlPreco :frmCarrosNovo:pnlSituacao"/>
+					
+				</f:facet>
+			</p:dataTable>
+		</h:form>
+		
+			<p:dialog widgetVar="dlgPesquisa" closable="false" draggble="false" resizable="false" modal="true" appendTo="@(body)" header="Pesquisa carro">
+			
+					<h:form id="frmPesquisa">
+					
+						<h:panelGrid id="pnlPesquisaPlaca" columns="2">
+							<h:outputText value="Placa: "/>
+							<h:outputText size="20" maxlength="7" value="#{MBServico.servico.placa.placa}" />
+						</h:panelGrid>
+							
+						<h:panelGrid id="pnlPesquisaDescricao" columns="2">
+							<h:outputText value="Descrição: "/>
+							<h:outputText size="20" maxlength="10" value="#{MBServico.servico.descricao.descricao}" />
+						</h:panelGrid>	
+						
+						<h:panelGrid id="pnlPesquisaPeriodo" columns="2">	
+							<h:outputText value="Periodo: "/>
+							<h:outputText size="20" maxlength="15" value="#{MBServico.servico.periodo}" />
+						</h:panelGrid>
+						
+						<h:panelGrid columns="2">
+							<p:commandButton value="Cancelar" onclick="PF('dlgPesquisa').hide();"/>
+						</h:panelGrid>
+						
+					</h:form>	
+			</p:dialog>
+			
+			<p:dialog widgetVar="dlgNovo" closable="false" draggble="false" resizable="false" modal="true" appendTo="@(body)" header="Add Carro Novo">
+			
+					<h:form id="frmCarrosNovo">
+						<h:panelGrid id="pnlPlaca" columns="2">
+							<p:outputLabel value="Placa: "/>
+							<p:inputText size="20" maxlength="7" value="#{MBCarro.carro.placa}" />
+						</h:panelGrid>
+							
+						<h:panelGrid id="pnlCor" columns="2">
+							<p:outputLabel value="Cor: "/>
+							<p:inputText size="20" maxlength="10" value="#{MBCarro.carro.cor}" />
+						</h:panelGrid>	
+						
+						<h:panelGrid id="pnlModelo" columns="2">	
+							<p:outputLabel value="Modelo: "/>
+							<p:inputText size="20" maxlength="15" value="#{MBCarro.carro.modelo}" />
+						</h:panelGrid>
+						
+						<h:panelGrid id="pnlAno" columns="2">	
+							<p:outputLabel value="Ano: "/>
+							<p:inputText size="20" maxlength="10" value="#{MBCarro.carro.ano}" />
+						</h:panelGrid>
+						
+						<h:panelGrid id="pnlPreco" columns="2">	
+							<p:outputLabel value="Preco: "/>
+							<p:inputText size="20" maxlength="9" value="#{MBCarro.carro.preco}" />
+						</h:panelGrid>
+						
+						<h:panelGrid id="pnlSituacao" columns="2">	
+							<p:outputLabel value="Situação: "/>
+							<p:inputText size="20" maxlength="15" value="#{MBCarro.carro.situacao}" />
+						</h:panelGrid>
+						
+						<h:panelGrid columns="2">
+							<p:commandButton value="Gravar" actionListener="#{MBCarro.salvar}" 
+							oncomplete="PF('dlgNovo').hide(); PF('tabelaCarros').clearFilters();" update=":frmCarrosListagem:tblCarros :msgGlobal"/> 
+							<p:commandButton value="Cancelar" onclick="PF('dlgNovo').hide();"/>
+						</h:panelGrid>
+					</h:form>
+					
+			</p:dialog>
+			
+			<p:dialog widgetVar="dlgExcluir" closable="false" draggble="false" resizable="false" modal="true" appendTo="@(body)" header="Excluir Carro">
+			
+					<h:form id="frmCarrosExcluir">
+					
+						<h:panelGrid id="pnlPlacaExcluir" columns="2">
+							<h:outputText value="Placa: "/>
+							<h:outputText size="20" maxlength="7" value="#{MBCarro.carro.placa}" />
+						</h:panelGrid>
+							
+						<h:panelGrid id="pnlCorExcluir" columns="2">
+							<h:outputText value="Cor: "/>
+							<h:outputText size="20" maxlength="10" value="#{MBCarro.carro.cor}" />
+						</h:panelGrid>	
+						
+						<h:panelGrid id="pnlModeloExcluir" columns="2">	
+							<h:outputText value="Modelo: "/>
+							<h:outputText size="20" maxlength="15" value="#{MBCarro.carro.modelo}" />
+						</h:panelGrid>
+						
+						<h:panelGrid id="pnlAnoExcluir" columns="2">	
+							<h:outputText value="Ano: "/>
+							<h:outputText size="20" maxlength="10" value="#{MBCarro.carro.ano}" />
+						</h:panelGrid>
+						
+						<h:panelGrid id="pnlPrecoExcluir" columns="2">	
+							<h:outputText value="Preco: "/>
+							<h:outputText size="20" maxlength="9" value="#{MBCarro.carro.preco}" />
+						</h:panelGrid>
+						
+						<h:panelGrid id="pnlSituacaoExcluir" columns="2">	
+							<p:outputLabel value="Situação: "/>
+							<h:outputText size="20" maxlength="15" value="#{MBCarro.carro.situacao}" />
+						</h:panelGrid>
+						
+						<h:panelGrid columns="2">
+							<p:commandButton value="Confirmar Exclusão" actionListener="#{MBCarro.excluir}" 
+							oncomplete="PF('dlgExcluir').hide(); PF('tabelaCarros').clearFilters();" update=":frmCarrosListagem:tblCarros :msgGlobal"/> 
+							<p:commandButton value="Cancelar" onclick="PF('dlgExcluir').hide();"/>
+						</h:panelGrid>
+					</h:form>	
+			</p:dialog>
+			
+			<p:dialog widgetVar="dlgEditar" closable="false" draggble="false" resizable="false" modal="true" appendTo="@(body)" header="Editar Carro">
+			
+					<h:form id="frmCarrosEditar">
+						<h:panelGrid id="pnlPlacaEditar" columns="2" >
+							<h:outputText value="Placa: "/>
+							<h:outputText size="20" maxlength="7" value="#{MBCarro.carro.placa}" />
+						</h:panelGrid>
+							
+						<h:panelGrid id="pnlCorEditar" columns="2">
+							<h:outputText value="Cor: "/>
+							<p:inputText size="20" maxlength="10" value="#{MBCarro.carro.cor}" />
+						</h:panelGrid>	
+						
+						<h:panelGrid id="pnlModeloEditar" columns="2">	
+							<h:outputText value="Modelo: "/>
+							<p:inputText size="20" maxlength="15" value="#{MBCarro.carro.modelo}" />
+						</h:panelGrid>
+						
+						<h:panelGrid id="pnlAnoEditar" columns="2">	
+							<h:outputText value="Ano: "/>
+							<p:inputText size="20" maxlength="4" value="#{MBCarro.carro.ano}" />
+						</h:panelGrid>
+						
+						<h:panelGrid id="pnlPrecoEditar" columns="2">	
+							<h:outputText value="Preço: "/>
+							<p:inputText size="20" maxlength="9" value="#{MBCarro.carro.preco}" />
+						</h:panelGrid>
+						
+						<h:panelGrid id="pnlSituacaoEditar" columns="2">	
+							<h:outputText value="Situaçao: "/>
+							<p:inputText size="20" maxlength="15" value="#{MBCarro.carro.situacao}" />
+						</h:panelGrid>
+				
+						<h:panelGrid columns="2">
+							<p:commandButton value="Editar" actionListener="#{MBCarro.editar}" oncomplete="PF('dlgEditar').hide();  PF('tabelaCarros').clearFilters();" update=":frmCarrosListagem:tblCarros :msgGlobal"/> 
+							<p:commandButton value="Cancelar" onclick="PF('dlgEditar').hide();"/>
+						</h:panelGrid>
+					</h:form>
+					
+			</p:dialog>
+			
+			
+	</ui:define>
+</ui:composition>
